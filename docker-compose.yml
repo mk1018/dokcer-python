@@ -1,0 +1,32 @@
+version: '3'
+services:
+  python3:
+    restart: always
+    build: ./infra/python
+    container_name: 'python3'
+    working_dir: '/root/'
+    tty: true
+    volumes:
+      - ./opt:/root/opt
+    networks:
+      - python-net
+    env_file:
+      - .env
+
+  db:
+    build: ./infra/db
+    ports:
+      - 33063:3306
+    volumes:
+      - db-store:/var/lib/mysql
+    # env_file:
+    #   - ./backend/.env.dev
+    networks:
+      - python-net
+
+volumes:
+  db-store:
+
+networks:
+  python-net:
+    driver: bridge
